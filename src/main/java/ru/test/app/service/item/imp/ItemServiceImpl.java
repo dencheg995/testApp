@@ -148,7 +148,7 @@ public class ItemServiceImpl extends AbstractBaseEntityService<Item, ItemDao> im
             offset = itemContainer.getOffset();
 
         int page = offset / limit;
-        return PageRequest.of(page, itemContainer.getLimit());
+        return PageRequest.of(page, limit);
     }
 
     @Override
