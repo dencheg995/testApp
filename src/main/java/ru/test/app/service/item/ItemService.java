@@ -1,5 +1,6 @@
 package ru.test.app.service.item;
 
+import ru.test.app.container.ItemContainer;
 import ru.test.app.entity.item.Item;
 import ru.test.app.entity.support.item.ItemDetailDto;
 import ru.test.app.entity.support.item.ItemDto;
@@ -11,7 +12,7 @@ public interface ItemService extends BaseEntityService<Item> {
 
     List<ItemDto> getByPartyId(Long partyId);
 
-    List<ItemDto> getAllWithoutParentId();
+    List<ItemDto> getAllWithoutParentId(ItemContainer itemContainer);
 
     ItemDetailDto getDetailInfoById(Long id);
 

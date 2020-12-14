@@ -56,6 +56,7 @@ public class DBConfiguration {
         properties.put(AvailableSettings.USE_SQL_COMMENTS, true);
         properties.put(AvailableSettings.HBM2DDL_AUTO, env.getProperty("hibernate.hbm2ddl.auto"));
         properties.put(AvailableSettings.ENABLE_LAZY_LOAD_NO_TRANS, true);
+        properties.put("hibernate.temp.use_jdbc_metadata_defaults", false);
 
         if (env.containsProperty("spring.jpa.properties.hibernate.session_factory.statement_inspector")) {
             properties.put(AvailableSettings.STATEMENT_INSPECTOR, env.getProperty("spring.jpa.properties.hibernate.session_factory.statement_inspector"));
@@ -92,6 +93,7 @@ public class DBConfiguration {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "none");
         properties.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
+        properties.setProperty("hibernate.temp.use_jdbc_metadata_defaults", "false");
 
         return properties;
     }

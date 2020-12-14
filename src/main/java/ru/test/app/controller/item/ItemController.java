@@ -4,10 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.test.app.container.ItemContainer;
 import ru.test.app.controller.AbstractController;
 import ru.test.app.entity.support.item.ItemDetailDto;
 import ru.test.app.entity.support.item.ItemDto;
@@ -37,9 +35,13 @@ public class ItemController extends AbstractController {
     }
 
     @RequestMapping(value = "", method = GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ItemDto>> getAll() {
+    public ResponseEntity<List<ItemDto>> getAll(@RequestParam(required = false) String serialNumber,
+                                                @RequestParam(required = false) Integer offset,
+                                                @RequestParam(required = false) Integer limit) {
         HttpHeaders httpHeaders = getHttpHeadersDescription(GET_ALL_DESCRIPTION);
-        return new ResponseEntity<>(itemService.getAllWithoutParentId(), httpHeaders, HttpStatus.OK);
+
+        ItemContainer itemContainer = ItemContainer.of(serialNumber, limit, offset);
+        return new ResponseEntity<>(itemService.getAllWithoutParentId(itemContainer), httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "{itemId}", method = GET, produces = APPLICATION_JSON_VALUE)

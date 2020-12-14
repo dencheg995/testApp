@@ -1,7 +1,5 @@
 package ru.test.app.entity.support;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Temporal;
@@ -15,7 +13,6 @@ public class PageOpenId implements Serializable {
 
     private Date date;
 
-    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date")
     public Date getDate() {

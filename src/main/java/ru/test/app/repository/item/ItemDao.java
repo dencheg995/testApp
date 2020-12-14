@@ -1,5 +1,6 @@
 package ru.test.app.repository.item;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,7 +16,10 @@ public interface ItemDao extends JpaRepository<Item, Long> {
     List<Item> getByPartyId(@Param("partyId") Long partyId);
 
     @Query("SELECT item FROM Item item WHERE item.party IS NOT NULL AND item.type = :typeId AND item.parentItem IS NULL")
-    List<Item> getAllWithoutParentIdByType(@Param("typeId") Long typeId);
+    List<Item> getAllWithoutParentIdByType(@Param("typeId") Long typeId, Pageable pageable);
+
+    @Query("SELECT item FROM Item item WHERE item.party IS NOT NULL AND item.type = :typeId AND item.parentItem IS NULL AND item.serial = :serial")
+    List<Item> getAllWithoutParentIdByTypeAndBySerial(@Param("typeId") Long typeId, @Param("serial") String serial, Pageable pageable);
 
     @Query("SELECT item FROM Item item WHERE item.party IS NOT NULL AND item.parentItem IS NOT NULL AND item.type = :typeId AND item.id = :itemId")
     Item getByIdAndType(@Param("itemId") Long itemId, @Param("typeId") Long typeId);

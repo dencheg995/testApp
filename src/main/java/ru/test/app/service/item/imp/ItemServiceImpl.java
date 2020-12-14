@@ -1,7 +1,9 @@
 package ru.test.app.service.item.imp;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import ru.test.app.container.ItemContainer;
 import ru.test.app.entity.item.Item;
 import ru.test.app.entity.item.ItemTypeEnum;
 import ru.test.app.entity.party.Party;
@@ -118,15 +120,35 @@ public class ItemServiceImpl extends AbstractBaseEntityService<Item, ItemDao> im
     }
 
     @Override
-    public List<ItemDto> getAllWithoutParentId() {
+    public List<ItemDto> getAllWithoutParentId(ItemContainer itemContainer) {
 
+        List<Item> items;
 
-        List<Item> items = getDao().getAllWithoutParentIdByType(ItemTypeEnum.PACK.getType());
+        PageRequest pageRequest = getPageRequest(itemContainer);
+
+        if (nonNull(itemContainer.getSerialNumber()))
+            items = getDao().getAllWithoutParentIdByTypeAndBySerial(ItemTypeEnum.PACK.getType(), itemContainer.getSerialNumber(), pageRequest);
+        else
+            items = getDao().getAllWithoutParentIdByType(ItemTypeEnum.PACK.getType(), pageRequest);
 
         if (isEmpty(items))
             return Collections.emptyList();
 
         return getDtoList(items);
+    }
+
+    private PageRequest getPageRequest(ItemContainer itemContainer) {
+        int limit = 10;
+        int offset = 0;
+
+        if (nonNull(itemContainer.getLimit()))
+            limit = itemContainer.getLimit();
+
+        if (nonNull(itemContainer.getOffset()))
+            offset = itemContainer.getOffset();
+
+        int page = offset / limit;
+        return PageRequest.of(page, itemContainer.getLimit());
     }
 
     @Override
@@ -188,7 +210,7 @@ public class ItemServiceImpl extends AbstractBaseEntityService<Item, ItemDao> im
     private void updateChildrenCount(Item item) {
         Long childrenCount = item.getChildrenCount();
         if (isNull(childrenCount))
-            item.setChildrenCount(0L);
+            item.setChildrenCount(1L);
         else
             item.setChildrenCount(childrenCount + 1);
     }
